@@ -1,9 +1,11 @@
+const axios = require("axios");
+
 const order = require("../models/order.model");
 
 const addOrder = async (req, res) => {
 	try {
 		const userId = req.body.userId;
-		const response = await axios.get(`http://localhost:5005/${userId}`);
+		const response = await axios.get(`http://localhost:5002/${userId}`);
 		const newOrder = new order(req.body);
 		newOrder.customer = response.data.data;
 		await newOrder.save();
