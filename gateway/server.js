@@ -21,6 +21,7 @@ app.use("/orders", verifyAuth, proxy(`${BASE_URL}5003`));
 app.use("/feedbacks", verifyAuth, proxy(`${BASE_URL}5004`));
 app.use("/admin", verifyAuth, proxy(`${BASE_URL}5005`));
 app.use("/auth", verifyAuth, proxy(`${BASE_URL}5006`));
+app.use("/payments", verifyAuth, proxy(`${BASE_URL}5008`));
 
 app.get("/", (req, res) => res.status(200).send("<h3>SHOP API - GATEWAY SERVICE</h3>"));
 
