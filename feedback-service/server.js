@@ -2,7 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const axios = require("axios");
 
 const app = express();
 dotenv.config();
@@ -27,5 +26,4 @@ mongoose
 		console.error(err.message);
 	});
 
-app.use("/admin-auth", require("./routes/feedback.admin.auth.route"));
-app.use("/user-auth", require("./routes/feedback.user.auth.route"));
+app.use("/", require("./routes/feedback.route"));

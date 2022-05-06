@@ -1,3 +1,5 @@
+const axios = require("axios");
+
 const Feedback = require("../models/feedback.model");
 
 /**
@@ -8,7 +10,8 @@ const Feedback = require("../models/feedback.model");
  */
 const saveFeedback = async (req, res) => {
 	if (req.body) {
-		const { topic, description, category, userId } = req.body;
+		const { topic, description, category } = req.body;
+		const userId = req.body.userId;
 
 		// user inputs validation
 		if (!topic || !description || !category || !userId) {
@@ -16,13 +19,17 @@ const saveFeedback = async (req, res) => {
 		}
 
 		try {
+			const response = await axios.get(`http://localhost:5002/${userId}`);
+
 			// save feedback
 			const newFeedback = new Feedback({
 				topic,
 				description,
-				givenBy: userId,
 				category,
+				givenBy: response.data.data,
 			});
+
+			console.log(newFeedback);
 
 			await newFeedback.save();
 
@@ -31,6 +38,7 @@ const saveFeedback = async (req, res) => {
 				.status(201)
 				.json({ message: "Feedback saved successfully", data: { newFeedback } });
 		} catch (err) {
+			console.log(err.message);
 			return res.status(500).json({ message: "Something went wrong" });
 		}
 	}
@@ -96,10 +104,9 @@ const getFeedbacks = async (req, res) => {
  */
 const getFeedbacksOfUser = async (req, res) => {
 	try {
-		const feedbacks = await Feedback.find({ givenBy: req.params.id });
+		const feedbacks = await Feedback.find({ "givenBy._id": req.params.id });
 		return res.status(200).json({ feedbacks: feedbacks });
 	} catch (err) {
-		console.error(err.message);
 		return res.status(500).send();
 	}
 };
@@ -116,7 +123,6 @@ const deleteFeedback = async (req, res) => {
 			await Feedback.findByIdAndDelete(req.params.id);
 			return res.status(200).send();
 		} catch (err) {
-			console.error(err.message);
 			return res.status(500).send();
 		}
 	}
@@ -128,4 +134,5 @@ module.exports = {
 	getFeedbacks,
 	getFeedback,
 	deleteFeedback,
+	getFeedbacksOfUser,
 };
