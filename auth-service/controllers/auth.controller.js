@@ -7,9 +7,9 @@ const jwt = require("jsonwebtoken");
  * @returns {Object} res
  */
 const checkLoggedIn = (req, res) => {
-	if (req.headers?.authorization) {
+	if (req.body?.token) {
 		try {
-			const token = req.headers.authorization;
+			const token = req.body.token;
 
 			if (!token) return res.json({ state: false, role: "" });
 
